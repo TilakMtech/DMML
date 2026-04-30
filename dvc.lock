@@ -1,0 +1,44 @@
+schema: '2.0'
+stages:
+  ingest:
+    cmd: python -m src.ingestion.ingest
+    deps:
+    - path: data/incoming/interactions.csv
+      hash: md5
+      md5: 7432c6bbad04a1e76823f41c4f345c49
+      size: 187950
+    - path: data/incoming/mock_products_api.json
+      hash: md5
+      md5: 2ea77bc25e047268a4fecd66f3c54173
+      size: 18679
+    - path: src/ingestion/ingest.py
+      hash: md5
+      md5: 5209ac6fb63293b8a07c6afcb21c028a
+      size: 2302
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: e2b046da82ca9338892b121ad6c66e50.dir
+      size: 207349
+      nfiles: 2
+  validate:
+    cmd: python -m src.validation.validate
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: e2b046da82ca9338892b121ad6c66e50.dir
+      size: 207349
+      nfiles: 2
+    - path: src/validation/validate.py
+      hash: md5
+      md5: 0aad9612c99869ebabbc58e69a0bfa9a
+      size: 4923
+    outs:
+    - path: reports/data_quality_report.json
+      hash: md5
+      md5: 176723eae621cc40fa55264b1a678437
+      size: 711
+    - path: reports/data_quality_report.pdf
+      hash: md5
+      md5: c3088f76250aebb359e8d5ac0f364b78
+      size: 2293

@@ -1,0 +1,42 @@
+stages:
+  ingest:
+    cmd: python -m src.ingestion.ingest
+    deps:
+      - src/ingestion/ingest.py
+      - data/incoming/interactions.csv
+      - data/incoming/mock_products_api.json
+    outs:
+      - data/raw
+  validate:
+    cmd: python -m src.validation.validate
+    deps:
+      - src/validation/validate.py
+      - data/raw
+    outs:
+      - reports/data_quality_report.json
+      - reports/data_quality_report.pdf
+  prepare:
+    cmd: python -m src.preparation.prepare
+    deps:
+      - src/preparation/prepare.py
+      - data/raw
+    outs:
+      - data/prepared
+      - reports/figures
+  features:
+    cmd: python -m src.features.build_features
+    deps:
+      - src/features/build_features.py
+      - data/prepared
+    outs:
+      - data/transformed
+  train:
+    cmd: python -m src.training.train
+    deps:
+      - src/training/train.py
+      - data/prepared
+      - data/transformed
+    outs:
+      - models/svd_recommender.joblib
+    metrics:
+      - reports/model_performance.json

@@ -1,0 +1,4 @@
+user_id,user_event_count,user_unique_items,user_avg_strength,user_total_spend,user_last_event_ts
+U0001,13,12,1.1538461538461535,422.15,2026-04-24 15:18:09+00:00
+U0002,20,18,2.1,700.49,2026-04-29 20:16:09+00:00
+U0003,10,10,1.5,342.7,2026-04-28 02:47:09+00:00
