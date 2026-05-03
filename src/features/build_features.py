@@ -1,3 +1,18 @@
+"""
+Feature engineering module for the RecoMart recommendation pipeline.
+
+This module transforms prepared user-item events into features suitable for
+recommendation algorithms. It creates user-level, item-level, user-item-level,
+and co-occurrence features, then stores them in transformed datasets and a
+structured warehouse.
+
+Key responsibilities:
+- Build user activity features
+- Build item popularity and engagement features
+- Build user-item affinity features
+- Generate item co-occurrence features
+- Store transformed outputs for training and feature-store registration
+"""
 from __future__ import annotations
 import sqlite3, pandas as pd, numpy as np
 from pathlib import Path
@@ -5,6 +20,12 @@ from src.utils.common import ROOT, ensure_dirs, setup_logger, save_json, utc_now
 LOG=setup_logger('features','logs/features.log')
 
 def main():
+    """
+    Executes the feature engineering stage.
+
+    Reads prepared interaction data, creates recommendation features, writes
+    transformed datasets, and updates the structured feature warehouse.
+    """
     ensure_dirs('data/transformed')
     events=pd.read_csv(ROOT/'data/prepared/user_item_events.csv')
     events['event_ts']=pd.to_datetime(events['event_ts'], utc=True)

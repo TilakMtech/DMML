@@ -19,3 +19,5 @@ Each pipeline stage writes metadata to `reports/*.json` and logs to `logs/*.log`
 6. `models` and `mlruns/<run_id>` model artifact and experiment metadata
 
 Raw and transformed data snapshots are versioned by DVC using `dvc.yaml` and can be pushed to remote storage.
+
+The `dvc.lock` file ensures exact reproducibility by capturing the state of pipeline execution.

@@ -1,20 +1,27 @@
 project: RecoMart Recommendation Pipeline
+
 raw_root: data/raw
 prepared_root: data/prepared
 transformed_root: data/transformed
 feature_store_root: data/feature_store
 logs_root: logs
 model_root: models
+
 random_seed: 42
+
 ingestion:
   batch_interactions_csv: data/incoming/interactions.csv
   product_api_url: mock://recomart/products
+
 validation:
   rating_min: 1
   rating_max: 5
-  required_interaction_columns: [user_id, item_id, event_type, rating, quantity, price, event_ts]
+  required_interaction_columns: [user_id, item_id, event_type, event_ts]
   required_product_columns: [item_id, category, brand, price, sentiment_score, popularity_score]
+
 model:
   top_k: 10
-  test_days: 10
-  n_components: 16
+  test_days: 7
+  n_components: 8
+
+mlflow_tracking_uri: mlruns

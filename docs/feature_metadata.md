@@ -8,3 +8,5 @@
 | item_cooccurrence | item_id, similar_item_id | cooccurrence_score | user-item baskets | Similar item candidates |
 
 Feature store versions are stored under `data/feature_store/version=<timestamp>/`. `LATEST.json` points to the current materialized version. Retrieval is supported for training and inference through `src/feature_store/registry.py`.
+
+Features are used consistently across training and inference to ensure no feature skew.

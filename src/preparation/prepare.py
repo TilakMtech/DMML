@@ -1,3 +1,17 @@
+"""
+Data preparation and EDA module for the RecoMart recommendation pipeline.
+
+This module cleans, preprocesses, and prepares validated data for feature
+engineering. It also generates exploratory analysis outputs such as interaction
+distribution, item popularity, and sparsity visualizations.
+
+Key responsibilities:
+- Clean validated interaction and product data
+- Encode categorical variables
+- Normalize numerical variables
+- Generate prepared user-item event data
+- Produce EDA plots and summary outputs
+"""
 from __future__ import annotations
 import glob
 from pathlib import Path
@@ -13,6 +27,12 @@ def latest(pattern):
     return Path(files[-1])
 
 def main():
+    """
+    Executes the data preparation stage.
+
+    Loads validated data, performs cleaning and preprocessing, generates EDA
+    plots, and writes prepared datasets for transformation.
+    """
     ensure_dirs('data/prepared','reports/figures')
     interactions=pd.read_csv(latest('data/raw/source=csv/type=interactions/dt=*/hour=*/interactions.csv'))
     products=pd.read_json(latest('data/raw/source=rest_api/type=products/dt=*/hour=*/products.json'))

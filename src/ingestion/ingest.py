@@ -1,3 +1,17 @@
+"""
+Data ingestion module for the RecoMart recommendation pipeline.
+
+This module ingests user interaction data from CSV files and product metadata
+from a mock REST API source. Ingested data is stored in the raw data lake using
+a partitioned folder structure based on source, type, date, and hour.
+
+Key responsibilities:
+- Read batch interaction data
+- Fetch product metadata
+- Apply retry logic for transient failures
+- Log ingestion success and failure events
+- Write ingestion manifests for lineage tracking
+"""
 from __future__ import annotations
 import shutil, time, json
 from pathlib import Path
@@ -51,6 +65,12 @@ def ingest_products_api():
     return str(out.relative_to(ROOT))
 
 def main():
+    """
+    Executes the ingestion stage of the pipeline.
+
+    Loads interaction data and product metadata, writes them to the raw
+    storage layer, and records ingestion metadata for auditability.
+    """
     ensure_dirs('logs')
     outputs = {'run_ts': utc_now(), 'raw_files': [ingest_csv(), ingest_products_api()]}
     save_json(outputs, 'reports/ingestion_manifest.json')

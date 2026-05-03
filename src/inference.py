@@ -1,9 +1,31 @@
+"""
+Inference module for the RecoMart recommendation pipeline.
+
+This module loads the trained recommendation model and generates Top-K product
+recommendations for a given user.
+
+Key responsibilities:
+- Load trained SVD recommender artifact
+- Accept user ID and Top-K value as inputs
+- Rank candidate items by predicted relevance
+- Return personalized recommendations
+"""
 from __future__ import annotations
 import numpy as np, pandas as pd
 from joblib import load
 from src.utils.common import ROOT
 
 def recommend_for_user(user_id: str, top_k: int = 10):
+    """
+    Generates Top-K recommendations for a user.
+
+    Args:
+        user_id: User identifier for whom recommendations are generated.
+        top_k: Number of recommendations to return.
+
+    Returns:
+        List of recommended item IDs ranked by predicted relevance.
+    """
     model=load(ROOT/'models/svd_recommender.joblib')
     users,items=model['users'],model['items']
     if user_id not in users:

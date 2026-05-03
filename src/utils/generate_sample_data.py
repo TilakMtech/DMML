@@ -1,3 +1,17 @@
+"""
+Sample data generation module for the RecoMart recommendation pipeline.
+
+This module creates synthetic but reproducible datasets for user interactions
+and product metadata. It supports offline execution of the full pipeline
+without requiring external systems.
+
+Key responsibilities:
+- Generate user-item interaction records
+- Generate product metadata
+- Write input files under data/incoming
+- Ensure reproducibility using a fixed random seed
+"""
+
 from __future__ import annotations
 from pathlib import Path
 import numpy as np, pandas as pd

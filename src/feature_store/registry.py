@@ -1,3 +1,17 @@
+"""
+Custom feature store registry for the RecoMart recommendation pipeline.
+
+This module implements a lightweight feature store that stores versioned
+feature snapshots and metadata. It enables consistent feature retrieval for
+training and inference.
+
+Key responsibilities:
+- Register engineered feature tables
+- Store feature metadata
+- Maintain versioned feature snapshots
+- Provide retrieval examples for users and items
+- Support reproducibility across training and inference
+"""
 from __future__ import annotations
 import shutil, json
 from pathlib import Path

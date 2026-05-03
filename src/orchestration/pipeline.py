@@ -1,3 +1,19 @@
+"""
+Pipeline orchestration module for the RecoMart recommendation pipeline.
+
+This module coordinates the end-to-end execution of all pipeline stages in the
+correct order. It follows DAG principles where each stage depends on the
+successful completion of previous stages.
+
+Pipeline stages:
+1. Generate sample data
+2. Ingest raw data
+3. Validate data
+4. Prepare data
+5. Build features
+6. Register feature store
+7. Train and evaluate model
+"""
 from __future__ import annotations
 import subprocess, sys
 from pathlib import Path
@@ -13,6 +29,16 @@ TASKS=[
  ('train','src.training.train')]
 
 def run_task(name, module):
+    """
+    Runs a pipeline task as a Python module.
+
+    Args:
+        name: Human-readable task name.
+        module: Python module path to execute.
+
+    Raises:
+        RuntimeError: If the task fails.
+    """
     LOG.info('START task=%s', name)
     res=subprocess.run([sys.executable,'-m',module], cwd=ROOT, text=True, capture_output=True)
     (ROOT/f'logs/{name}.stdout.log').write_text(res.stdout, encoding='utf-8')
@@ -23,6 +49,12 @@ def run_task(name, module):
     LOG.info('SUCCESS task=%s', name)
 
 def main():
+    """
+    Executes the full end-to-end pipeline.
+
+    Runs all pipeline stages sequentially, logs task success or failure, and
+    stops execution if any stage fails.
+    """
     started=utc_now(); completed=[]
     for name, module in TASKS:
         run_task(name,module); completed.append(name)

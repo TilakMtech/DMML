@@ -1,3 +1,17 @@
+"""
+Data validation module for the RecoMart recommendation pipeline.
+
+This module validates raw ingested datasets before downstream processing.
+It checks schema completeness, missing values, duplicate records, and value
+ranges such as rating validity.
+
+Key responsibilities:
+- Validate user interaction data
+- Validate product metadata
+- Detect missing, duplicate, and invalid records
+- Generate data quality reports
+- Prevent poor-quality data from entering later pipeline stages
+"""
 from __future__ import annotations
 from pathlib import Path
 import glob, pandas as pd, numpy as np
@@ -13,6 +27,16 @@ def latest(pattern):
     return Path(files[-1])
 
 def validate_interactions(path: Path, cfg: dict):
+    """
+    Validates raw user interaction data.
+
+    Args:
+        path: Path to the raw interaction dataset.
+        cfg: Pipeline configuration containing validation rules.
+
+    Returns:
+        Tuple containing the validated DataFrame and validation issue summary.
+    """
     df = pd.read_csv(path)
     issues=[]
     required = cfg['validation']['required_interaction_columns']
@@ -35,6 +59,16 @@ def validate_interactions(path: Path, cfg: dict):
     return df, issues
 
 def validate_products(path: Path, cfg: dict):
+    """
+    Validates raw product metadata.
+
+    Args:
+        path: Path to the raw product metadata dataset.
+        cfg: Pipeline configuration containing validation rules.
+
+    Returns:
+        Tuple containing the validated DataFrame and validation issue summary.
+    """
     df = pd.read_json(path)
     issues=[]
     required = cfg['validation']['required_product_columns']
@@ -62,6 +96,12 @@ def make_pdf(summary, issues, out='reports/data_quality_report.pdf'):
     story.append(tbl2); doc.build(story); return out
 
 def main():
+    """
+    Executes the validation stage of the pipeline.
+
+    Reads the latest raw datasets, applies quality checks, writes validation
+    reports, and logs validation outcomes.
+    """
     cfg=load_config()
     ipath=latest('data/raw/source=csv/type=interactions/dt=*/hour=*/interactions.csv')
     ppath=latest('data/raw/source=rest_api/type=products/dt=*/hour=*/products.json')

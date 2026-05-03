@@ -1,3 +1,17 @@
+"""
+Model training and evaluation module for the RecoMart recommendation pipeline.
+
+This module trains a collaborative filtering recommendation model using
+Truncated SVD over the user-item interaction matrix. It evaluates the model
+using ranking metrics and logs experiment metadata using MLflow.
+
+Key responsibilities:
+- Build user-item interaction matrix
+- Train SVD recommendation model
+- Evaluate recommendations using Precision@K, Recall@K, and NDCG@K
+- Save trained model artifact
+- Log parameters, metrics, and artifacts to MLflow
+"""
 from __future__ import annotations
 
 import uuid
@@ -17,6 +31,17 @@ LOG = setup_logger("training", "logs/training.log")
 
 
 def precision_recall_ndcg_at_k(test_items, ranked, k):
+    """
+    Computes ranking metrics for a single user.
+
+    Args:
+        test_items: Set of relevant items from the test period.
+        ranked: Ranked list of recommended item IDs.
+        k: Number of top recommendations to evaluate.
+
+    Returns:
+        Tuple containing Precision@K, Recall@K, and NDCG@K.
+    """
     top = ranked[:k]
     hits = [1 if i in test_items else 0 for i in top]
 
@@ -31,6 +56,13 @@ def precision_recall_ndcg_at_k(test_items, ranked, k):
 
 
 def main():
+    """
+    Executes the model training stage.
+
+    Splits data into train and test windows, trains an SVD recommender,
+    evaluates ranking quality, saves model artifacts, and logs experiment
+    tracking information using MLflow.
+    """
     cfg = load_config()
     ensure_dirs("models", "mlruns", "reports")
 
